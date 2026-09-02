@@ -101,7 +101,9 @@ export interface CreateChatInput {
 
 export interface SendMessageInput {
   type: MessageType
-  content?: MessageContent
+  // The chat API wraps this raw value as `content[type]`, so a text message sends the plain
+  // string and a media message sends the media object - not a pre-shaped { text } / { media }.
+  content?: string | MessageMedia
   replyTo?: string
   mentions?: string[]
   e2ee?: {
@@ -109,6 +111,17 @@ export interface SendMessageInput {
     keys?: Record<string, string>
     alg?: string
   }
+}
+
+/** Reads the media object off a stored message regardless of whether the server kept it under
+ * `content.media` or under `content[type]` (image/video/audio/file). */
+export function messageMedia(msg: ChatMessage): MessageMedia | undefined {
+  const c = msg.content as (MessageContent & Record<string, unknown>) | undefined
+  if (!c) return undefined
+  if (c.media?.url) return c.media
+  const byType = c[msg.type] as MessageMedia | undefined
+  if (byType && typeof byType === "object" && "url" in byType) return byType
+  return undefined
 }
 
 export interface ParticipantKey {

@@ -6,7 +6,7 @@ import { useMessageActions } from "@/hooks/useMessages"
 import { decryptForSelf } from "@/lib/e2ee"
 import { cn, formatDateTime } from "@/lib/utils"
 import { messagePreview } from "@/lib/chat-display"
-import { docId, displayName, refId, type ChatMessage } from "@/types/chat"
+import { docId, displayName, messageMedia, refId, type ChatMessage } from "@/types/chat"
 
 const REACTIONS = ["👍", "❤️", "😂", "😮", "😢", "🙏"]
 
@@ -48,7 +48,7 @@ function TextBody({ message, selfUserId }: { message: ChatMessage; selfUserId: s
 }
 
 function MediaBody({ message }: { message: ChatMessage }): React.JSX.Element {
-  const media = message.content?.media
+  const media = messageMedia(message)
   if (!media?.url) return <span className="text-sm italic text-muted-foreground">{messagePreview(message)}</span>
   if (message.type === "image") {
     // eslint-disable-next-line @next/next/no-img-element

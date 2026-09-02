@@ -43,7 +43,7 @@ export function useSendText(chatId: string) {
   return {
     ...send,
     sendText: async (text: string, replyTo?: string): Promise<void> => {
-      await send.mutateAsync({ type: "text", content: { text }, replyTo })
+      await send.mutateAsync({ type: "text", content: text, replyTo })
     },
     sendEncrypted: async (
       text: string,
@@ -57,7 +57,7 @@ export function useSendText(chatId: string) {
       return true
     },
     sendMedia: async (media: MessageMedia, type: SendMessageInput["type"], replyTo?: string): Promise<void> => {
-      await send.mutateAsync({ type, content: { media }, replyTo })
+      await send.mutateAsync({ type, content: media, replyTo })
     },
   }
 }
@@ -75,7 +75,7 @@ export function useMessageActions(chatId: string) {
 
   const edit = useMutation({
     mutationFn: ({ messageId, text }: { messageId: string; text: string }) =>
-      client.editMessage(chatId, messageId, { type: "text", content: { text } }),
+      client.editMessage(chatId, messageId, { type: "text", content: text }),
     onSuccess: invalidate,
   })
 

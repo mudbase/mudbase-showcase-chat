@@ -1,4 +1,4 @@
-import { displayName, refId, type Chat, type ChatMessage, type UserSummary } from "@/types/chat"
+import { displayName, messageMedia, refId, type Chat, type ChatMessage, type UserSummary } from "@/types/chat"
 
 /** The participants other than the current user. */
 export function otherParticipants(chat: Chat, selfUserId: string): UserSummary[] {
@@ -54,7 +54,7 @@ export function messagePreview(msg: ChatMessage): string {
     case "audio":
       return "Audio message"
     case "file":
-      return msg.content?.media?.filename ?? "File"
+      return messageMedia(msg)?.filename ?? "File"
     case "location":
       return "Location"
     case "contact":
